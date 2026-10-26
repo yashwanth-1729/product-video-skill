@@ -77,16 +77,25 @@ for the rest, and shows you frames before the final render.
 ## Usage and plan limits
 
 <!-- USAGE:START -->
-Measured on real runs (details in [Tests](#tests)):
+Measured on the test runs below (Claude Sonnet 5.5, from brief to final file):
 
-| | Tokens per finished 1-minute video | Share of a 5-hour session |
+| Video | Tokens processed | Of which new input | Output |
+|---|---|---|---|
+| 53 s investor pitch, with voiceover | 17.4 M | 1.3 M | 0.14 M |
+| 31 s vertical reel, no voice | 13.1 M | 1.3 M | 0.15 M |
+
+So **a finished 1-minute video takes roughly 15–20 million tokens**, about 90% of them cached context
+being re-read on each step (which counts far less towards limits than new tokens).
+
+| Plan | Share of one 5-hour session per 1-minute video | Share of the weekly limit |
 |---|---|---|
-| Claude Pro | _measuring…_ | _measuring…_ |
-| Claude Max 5x | same tokens | about 1/5 of the Pro share |
-| Claude Max 20x | same tokens | about 1/20 of the Pro share |
+| Claude Pro | about 20–40% | about 3–5% |
+| Claude Max 5x | about 4–8% | under 1% |
+| Claude Max 20x | about 1–2% | well under 1% |
 
-Most of the tokens are context re-read on each step, so a fresh session is far cheaper than adding a video
-to a long one. Review passes and re-recordings add to it, and so do larger models.
+These are estimates from the plan's usage meter while the runs were going, not official figures: plan
+limits aren't published in tokens and vary with load. Opus uses limits faster than Sonnet, and every extra
+review pass or re-recording adds to it. A fresh session is cheaper than adding a video to a long one.
 <!-- USAGE:END -->
 
 ## How it works
@@ -110,7 +119,44 @@ take, and the video re-times itself.
 ## Tests
 
 <!-- TESTS:START -->
-_Results from the with-skill vs without-skill runs will appear here._
+Two briefs for a fictional invoicing app (Ledgerbird), each given to Claude Sonnet 5.5 running unattended,
+once with this skill and once without it.
+
+**1. "A ~30 second vertical launch reel for Instagram, no voiceover, clean and premium."**
+
+| Check | With the skill | Without |
+|---|---|---|
+| 1080×1920, 20–40 s | ✅ 31.2 s | ✅ 30.0 s |
+| Real app footage, no invented claims | ✅ every claim mapped to a screen | ✅ |
+| Frames reviewed before delivery | ✅ 3 passes | ✅ |
+| Ends with a clear call to action | ✅ | ✅ |
+| Framing | ✅ nothing cut at the edges | ⚠️ headings and rows cropped at the frame edge |
+| File size | 9.2 MB | 25.6 MB |
+
+![Reel made with the skill](docs/tests/reel-with-skill.jpg)
+
+Without the skill, Claude still made a good-looking reel (dark, dramatic, with a spotlight on the active
+row), so on a short silent reel the gap is mostly polish and consistency:
+
+![Reel made without the skill](docs/tests/reel-without-skill.jpg)
+
+**2. "A 45–60 second pitch for angel investors, 4:5, professional male voiceover, script under 900
+characters, at most 2 voice takes."**
+
+| Check | With the skill |
+|---|---|
+| 1080×1350 with audio, 45–60 s | ✅ 52.7 s |
+| Loudness −18 to −13 LUFS, true peak ≤ −1 dBTP | ✅ −16.5 LUFS, −4.7 dBTP |
+| Scenes synced to the narration | ✅ cut on word timings |
+| Credit budget | ✅ 831 characters, 1 take |
+| No false claims | ✅ no revenue, users or results claimed; demo data labelled |
+| One clear ask | ✅ "Reply to book a 15-minute walkthrough" |
+
+![Pitch made with the skill](docs/tests/pitch-with-skill.jpg)
+
+The run without the skill for this brief was stopped partway to stay within plan limits, so there's no
+comparison yet. Small defects the skill's own review left in: a heading clipped at the top of two frames,
+and one beat that fades out too early.
 <!-- TESTS:END -->
 
 The test cases live in `skills/product-video/evals/` in the `claude plugin eval` format, with a small
