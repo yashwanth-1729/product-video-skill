@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ledgerbird — invoices that chase themselves</title>
+<style>
+  :root { --accent:#4F46E5; --accent-soft:#EEF0FF; --ink:#0F172A; --ink2:#334155; --muted:#64748B; --line:#E2E8F0; --bg:#F7F8FB; --ok:#059669; --ok-soft:#E7F7F1; --warn:#B45309; --warn-soft:#FEF4E6; --bad:#DC2626; --bad-soft:#FEF2F2; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:var(--bg); }
+  a { color:inherit; text-decoration:none; }
+  .shell { display:grid; grid-template-columns:232px 1fr; min-height:100vh; }
+  aside { background:#fff; border-right:1px solid var(--line); padding:22px 16px; position:sticky; top:0; height:100vh; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; letter-spacing:-.02em; margin:0 8px 26px; }
+  .brand .mark { width:32px; height:32px; border-radius:9px; background:var(--accent); display:grid; place-items:center; color:#fff; }
+  nav a { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; color:var(--ink2); font-weight:500; margin-bottom:2px; }
+  nav a.on { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+  nav svg { width:18px; height:18px; }
+  main { padding:30px 38px 60px; max-width:1100px; }
+  h1 { font-size:28px; letter-spacing:-.025em; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 26px; }
+  .row { display:flex; align-items:end; justify-content:space-between; gap:16px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#fff; border:0; border-radius:10px; padding:10px 16px; font:600 14px inherit; font-family:inherit; cursor:pointer; box-shadow:0 6px 16px -8px var(--accent); }
+  .btn.ghost { background:#fff; color:var(--ink); border:1px solid var(--line); box-shadow:none; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:0 1px 2px rgba(15,23,42,.04); }
+  .stat { padding:18px 18px 16px; }
+  .stat .k { color:var(--muted); font-size:13px; font-weight:500; }
+  .stat .v { font-size:28px; font-weight:750; letter-spacing:-.02em; margin-top:6px; }
+  .stat .h { font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  .grid2 { display:grid; grid-template-columns:1.4fr 1fr; gap:14px; }
+  .card h2 { font-size:15px; margin:0; padding:16px 18px; border-bottom:1px solid var(--line); }
+  .bars { display:flex; align-items:end; gap:10px; height:190px; padding:20px 18px 12px; }
+  .bars div { flex:1; background:linear-gradient(180deg, var(--accent), #7C74F0); border-radius:6px 6px 2px 2px; opacity:.9; }
+  .bars + .labels { display:flex; gap:10px; padding:0 18px 16px; color:var(--muted); font-size:12px; } .labels span { flex:1; text-align:center; }
+  ul.feed { list-style:none; margin:0; padding:6px 0; }
+  ul.feed li { display:flex; gap:12px; padding:11px 18px; align-items:center; }
+  .dot { width:9px; height:9px; border-radius:9px; flex-shrink:0; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:600; padding:12px 18px; border-bottom:1px solid var(--line); }
+  td { padding:13px 18px; border-bottom:1px solid var(--line); }
+  tr:last-child td { border-bottom:0; }
+  .pill { display:inline-block; padding:3px 10px; border-radius:999px; font-size:12.5px; font-weight:600; }
+  .p-paid { background:var(--ok-soft); color:var(--ok); } .p-sent { background:var(--accent-soft); color:var(--accent); }
+  .p-over { background:var(--bad-soft); color:var(--bad); } .p-draft { background:#F1F5F9; color:var(--ink2); }
+  .new-row { animation: flash 1.6s ease-out; } @keyframes flash { from { background:var(--accent-soft); } to { background:#fff; } }
+  form.card { padding:22px; max-width:620px; }
+  label { display:block; font-weight:600; font-size:13.5px; margin-bottom:14px; }
+  input, select { display:block; width:100%; margin-top:6px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font:15px inherit; font-family:inherit; background:#fff; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .toast { position:fixed; right:28px; bottom:28px; background:var(--ink); color:#fff; padding:14px 18px; border-radius:12px; font-weight:600; box-shadow:0 20px 40px -18px rgba(0,0,0,.5); transform:translateY(20px); opacity:0; transition:all .35s cubic-bezier(.2,1,.3,1); }
+  .toast.show { transform:none; opacity:1; }
+  .auto { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px; border-bottom:1px solid var(--line); }
+  .auto:last-child { border-bottom:0; }
+  .auto b { display:block; } .auto span { color:var(--muted); font-size:13.5px; }
+  .switch { width:44px; height:26px; border-radius:26px; background:#CBD5E1; position:relative; cursor:pointer; flex-shrink:0; transition:background .2s; border:0; }
+  .switch::after { content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:20px; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+  .switch.on { background:var(--accent); } .switch.on::after { transform:translateX(18px); }
+  .preview { margin-top:16px; padding:18px; background:#fff; border:1px solid var(--line); border-radius:16px; }
+  .preview .from { color:var(--muted); font-size:13px; margin-bottom:8px; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M4 16c3-1 5-4 6-8 2 3 5 5 10 5-3 3-7 5-12 5"/></svg></span>Ledgerbird</div>
+    <nav>
+      <a href="#/dashboard" data-r="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 13h6V4H4zM14 20h6V11h-6zM4 20h6v-3H4zM14 7h6V4h-6z"/></svg>Dashboard</a>
+      <a href="#/invoices" data-r="invoices"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></svg>Invoices</a>
+      <a href="#/clients" data-r="clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 20c.8-3.5 3.2-5 6-5s5.2 1.5 6 5"/></svg>Clients</a>
+      <a href="#/automations" data-r="automations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 10a7 7 0 0 1 12-3l2 2M19 4v5h-5M19 14a7 7 0 0 1-12 3l-2-2M5 20v-5h5"/></svg>Automations</a>
+    </nav>
+  </aside>
+  <main id="view"></main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 0 });
+const state = {
+  invoices: [
+    { no: 1048, client: "Northfield Studio", amount: 2400, due: "Nov 4", status: "Sent" },
+    { no: 1047, client: "Maple & Co.", amount: 1250, due: "Oct 30", status: "Paid" },
+    { no: 1046, client: "Brightline Labs", amount: 3800, due: "Oct 22", status: "Overdue" },
+    { no: 1045, client: "Okafor Design", amount: 960, due: "Oct 20", status: "Paid" },
+    { no: 1044, client: "Harbor Coffee", amount: 640, due: "Oct 18", status: "Paid" },
+    { no: 1043, client: "Lumen Health", amount: 5200, due: "Oct 12", status: "Paid" },
+  ],
+  autos: { before: true, overdue: true, thanks: false },
+};
+const pill = (s) => `<span class="pill ${{ Paid: "p-paid", Sent: "p-sent", Overdue: "p-over", Draft: "p-draft" }[s]}">${s}</span>`;
+
+const views = {
+  dashboard: () => `
+    <div class="row"><div><h1>Good morning, Alex</h1><p class="sub">Here's where your money is this month.</p></div>
+      <a class="btn" href="#/new">+ New invoice</a></div>
+    <div class="stats">
+      <div class="card stat"><div class="k">Paid this month</div><div class="v ok">${money(18420)}</div><div class="h">+22% vs last month</div></div>
+      <div class="card stat"><div class="k">Outstanding</div><div class="v">${money(4120)}</div><div class="h">3 invoices</div></div>
+      <div class="card stat"><div class="k">Overdue</div><div class="v bad">1</div><div class="h">Reminder sent today</div></div>
+      <div class="card stat"><div class="k">Avg. days to pay</div><div class="v">6.2</div><div class="h">was 19 before reminders</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Paid per week</h2>
+        <div class="bars">${[38, 52, 46, 61, 58, 72, 69, 84].map((h) => `<div style="height:${h}%"></div>`).join("")}</div>
+        <div class="labels">${["W1","W2","W3","W4","W5","W6","W7","W8"].map((l) => `<span>${l}</span>`).join("")}</div></div>
+      <div class="card"><h2>Activity</h2><ul class="feed">
+        <li><span class="dot" style="background:var(--ok)"></span><div><b>Maple & Co.</b> paid ${money(1250)}<div class="sub" style="margin:0;font-size:13px">2 hours ago</div></div></li>
+        <li><span class="dot" style="background:var(--accent)"></span><div>Reminder sent to <b>Brightline Labs</b><div class="sub" style="margin:0;font-size:13px">Automatic · today 9:00</div></div></li>
+        <li><span class="dot" style="background:var(--accent)"></span><div>Invoice #1048 sent to <b>Northfield</b><div class="sub" style="margin:0;font-size:13px">Yesterday</div></div></li>
+        <li><span class="dot" style="background:var(--ok)"></span><div><b>Okafor Design</b> paid ${money(960)}<div class="sub" style="margin:0;font-size:13px">Monday</div></div></li>
+      </ul></div>
+    </div>`,
+  invoices: () => `
+    <div class="row"><div><h1>Invoices</h1><p class="sub">Every invoice, and where it stands.</p></div><a class="btn" href="#/new">+ New invoice</a></div>
+    <div class="card"><table><thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Due</th><th>Status</th></tr></thead><tbody>
+      ${state.invoices.map((i, k) => `<tr class="${k === 0 && state.justAdded ? "new-row" : ""}"><td>#${i.no}</td><td><b>${i.client}</b></td><td>${money(i.amount)}</td><td>${i.due}</td><td>${pill(i.status)}</td></tr>`).join("")}
+    </tbody></table></div>`,
+  clients: () => `
+    <h1>Clients</h1><p class="sub">Who you work with, and how quickly they pay.</p>
+    <div class="card"><table><thead><tr><th>Client</th><th>Invoices</th><th>Avg. days to pay</th></tr></thead><tbody>
+      ${[["Lumen Health", 9, 4.1], ["Maple & Co.", 6, 5.0], ["Northfield Studio", 4, 7.2], ["Brightline Labs", 5, 12.8], ["Okafor Design", 3, 3.4]].map(([c, n, d]) => `<tr><td><b>${c}</b></td><td>${n}</td><td>${d}</td></tr>`).join("")}
+    </tbody></table></div>`,
+  automations: () => `
+    <h1>Automations</h1><p class="sub">Ledgerbird follows up so you don't have to.</p>
+    <div class="card">
+      ${[["before", "Remind clients 3 days before the due date", "A friendly heads-up with the payment link."], ["overdue", "Chase overdue invoices every 7 days", "Polite, then firmer. Stops the moment they pay."], ["thanks", "Say thank you when an invoice is paid", "A short note and a receipt."]]
+        .map(([k, t, s]) => `<div class="auto"><div><b>${t}</b><span>${s}</span></div><button class="switch ${state.autos[k] ? "on" : ""}" data-auto="${k}" aria-label="${t}"></button></div>`).join("")}
+    </div>
+    <div class="preview"><div class="from">Preview · reminder email</div>
+      <b>Friendly reminder: invoice #1046 is due</b>
+      <p style="margin:8px 0 0;color:var(--ink2)">Hi Brightline Labs, just a quick note that invoice #1046 for $3,800 was due on Oct 22. You can pay securely here in under a minute. Thank you!</p></div>`,
+  new: () => `
+    <h1>New invoice</h1><p class="sub">Send it now. Ledgerbird will handle the reminders.</p>
+    <form class="card" id="f">
+      <label>Client <select name="client"><option>Northfield Studio</option><option>Maple & Co.</option><option>Brightline Labs</option><option>Harbor Coffee</option></select></label>
+      <label>What it's for <input name="item" placeholder="e.g. Brand identity, phase 2"></label>
+      <div class="two"><label>Amount (USD) <input name="amount" inputmode="decimal" placeholder="0.00"></label>
+        <label>Due in <select name="due"><option>7 days</option><option selected>14 days</option><option>30 days</option></select></label></div>
+      <button class="btn" type="submit">Send invoice</button>
+    </form>`,
+};
+
+function render() {
+  const r = (location.hash.replace("#/", "") || "dashboard").split("?")[0];
+  document.getElementById("view").innerHTML = (views[r] || views.dashboard)();
+  document.querySelectorAll("nav a").forEach((a) => a.classList.toggle("on", a.dataset.r === r || (r === "new" && a.dataset.r === "invoices")));
+  const f = document.getElementById("f");
+  if (f) f.onsubmit = (e) => {
+    e.preventDefault();
+    const d = new FormData(f);
+    const amount = Number(String(d.get("amount")).replace(/[^\d.]/g, "")) || 0;
+    state.invoices.unshift({ no: state.invoices[0].no + 1, client: d.get("client"), amount, due: "Nov 9", status: "Sent" });
+    state.justAdded = true;
+    toast(`Invoice #${state.invoices[0].no} sent to ${d.get("client")}`);
+    location.hash = "#/invoices";
+  };
+  document.querySelectorAll("[data-auto]").forEach((b) => (b.onclick = () => { state.autos[b.dataset.auto] = !state.autos[b.dataset.auto]; b.classList.toggle("on"); }));
+}
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = "✓  " + msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2600);
+}
+window.addEventListener("hashchange", render);
+render();
+</script>
+</body>
+</html>

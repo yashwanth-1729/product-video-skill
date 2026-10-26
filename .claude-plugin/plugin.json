@@ -1,0 +1,17 @@
+{
+  "name": "product-video",
+  "displayName": "Product Video",
+  "version": "0.1.0",
+  "description": "Make professional motion-graphics product videos (launch films, demos, pitches, reels) from a real web app: story, claims check, scripted screen recording with a cursor-following camera, voiceover with word sync, Remotion composition, sound mix and a frame-by-frame review.",
+  "author": {
+    "name": "Yashwanth Cherukuri",
+    "url": "https://github.com/yashwanth-1729"
+  },
+  "homepage": "https://github.com/yashwanth-1729/product-video-skill",
+  "repository": "https://github.com/yashwanth-1729/product-video-skill",
+  "license": "MIT",
+  "keywords": ["video", "remotion", "product-demo", "launch-video", "screen-recording", "voiceover", "elevenlabs", "playwright", "motion-graphics"],
+  "experimental": {
+    "evals": "skills/product-video/evals"
+  }
+}

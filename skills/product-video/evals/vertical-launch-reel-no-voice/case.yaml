@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: vertical-launch-reel-no-voice
+expected_outcome: |
+  A 20-40 second 1080x1920 MP4 named ledgerbird-reel.mp4, built from real recordings of the
+  Ledgerbird demo app, with on-screen text or captions and no voiceover, ending on an end card with
+  one call to action, claiming nothing the app doesn't do, and with still frames reviewed before delivery.
+context:
+  scaffold_script: place-files.sh

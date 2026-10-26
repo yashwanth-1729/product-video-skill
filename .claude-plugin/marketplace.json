@@ -1,0 +1,15 @@
+{
+  "name": "product-video-skill",
+  "description": "Product videos from real web apps, made by Claude.",
+  "owner": {
+    "name": "Yashwanth Cherukuri",
+    "url": "https://github.com/yashwanth-1729"
+  },
+  "plugins": [
+    {
+      "name": "product-video",
+      "source": "./",
+      "description": "Professional motion-graphics product videos from a real web app: story, recording, voice, Remotion, sound and review."
+    }
+  ]
+}

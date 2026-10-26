@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: investor-pitch-with-voiceover
+expected_outcome: |
+  A 40-70 second 1080x1350 MP4 named ledgerbird-pitch.mp4 with an ElevenLabs male voiceover, scenes
+  timed to the narration, loudness around -16 LUFS, a single clear ask to investors at the end, no
+  claims the demo app can't back, and the TTS budget respected (under 900 characters, at most 2 takes).
+context:
+  scaffold_script: place-files.sh

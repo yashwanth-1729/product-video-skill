@@ -1,0 +1,297 @@
+{
+ "source": "estimate",
+ "audio": null,
+ "duration": 22.894,
+ "words": [
+  {
+   "text": "Every",
+   "start": 0,
+   "end": 0.235
+  },
+  {
+   "text": "week,",
+   "start": 0.275,
+   "end": 0.463
+  },
+  {
+   "text": "small",
+   "start": 0.703,
+   "end": 0.938
+  },
+  {
+   "text": "tasks",
+   "start": 0.978,
+   "end": 1.213
+  },
+  {
+   "text": "steal",
+   "start": 1.253,
+   "end": 1.488
+  },
+  {
+   "text": "hours",
+   "start": 1.528,
+   "end": 1.763
+  },
+  {
+   "text": "from",
+   "start": 1.803,
+   "end": 1.991
+  },
+  {
+   "text": "your",
+   "start": 2.031,
+   "end": 2.219
+  },
+  {
+   "text": "team...",
+   "start": 2.259,
+   "end": 2.447
+  },
+  {
+   "text": "chasing,",
+   "start": 2.937,
+   "end": 3.266
+  },
+  {
+   "text": "copying,",
+   "start": 3.506,
+   "end": 3.835
+  },
+  {
+   "text": "reminding.",
+   "start": 4.075,
+   "end": 4.498
+  },
+  {
+   "text": "Meet",
+   "start": 5.408,
+   "end": 5.596
+  },
+  {
+   "text": "Your",
+   "start": 5.636,
+   "end": 5.824
+  },
+  {
+   "text": "Product.",
+   "start": 5.864,
+   "end": 6.193
+  },
+  {
+   "text": "It",
+   "start": 6.653,
+   "end": 6.773
+  },
+  {
+   "text": "takes",
+   "start": 6.813,
+   "end": 7.048
+  },
+  {
+   "text": "the",
+   "start": 7.088,
+   "end": 7.229
+  },
+  {
+   "text": "busywork",
+   "start": 7.269,
+   "end": 7.645
+  },
+  {
+   "text": "off",
+   "start": 7.685,
+   "end": 7.826
+  },
+  {
+   "text": "your",
+   "start": 7.866,
+   "end": 8.054
+  },
+  {
+   "text": "plate,",
+   "start": 8.094,
+   "end": 8.329
+  },
+  {
+   "text": "automatically.",
+   "start": 8.569,
+   "end": 9.18
+  },
+  {
+   "text": "Set",
+   "start": 10.09,
+   "end": 10.231
+  },
+  {
+   "text": "it",
+   "start": 10.271,
+   "end": 10.391
+  },
+  {
+   "text": "up",
+   "start": 10.431,
+   "end": 10.551
+  },
+  {
+   "text": "once,",
+   "start": 10.591,
+   "end": 10.779
+  },
+  {
+   "text": "and",
+   "start": 11.019,
+   "end": 11.16
+  },
+  {
+   "text": "it",
+   "start": 11.2,
+   "end": 11.32
+  },
+  {
+   "text": "runs",
+   "start": 11.36,
+   "end": 11.548
+  },
+  {
+   "text": "on",
+   "start": 11.588,
+   "end": 11.708
+  },
+  {
+   "text": "its",
+   "start": 11.748,
+   "end": 11.889
+  },
+  {
+   "text": "own.",
+   "start": 11.929,
+   "end": 12.07
+  },
+  {
+   "text": "Everything",
+   "start": 12.98,
+   "end": 13.45
+  },
+  {
+   "text": "that",
+   "start": 13.49,
+   "end": 13.678
+  },
+  {
+   "text": "matters,",
+   "start": 13.718,
+   "end": 14.047
+  },
+  {
+   "text": "in",
+   "start": 14.287,
+   "end": 14.407
+  },
+  {
+   "text": "one",
+   "start": 14.447,
+   "end": 14.588
+  },
+  {
+   "text": "calm",
+   "start": 14.628,
+   "end": 14.816
+  },
+  {
+   "text": "view.",
+   "start": 14.856,
+   "end": 15.044
+  },
+  {
+   "text": "Invoices,",
+   "start": 15.954,
+   "end": 16.33
+  },
+  {
+   "text": "reminders,",
+   "start": 16.57,
+   "end": 16.993
+  },
+  {
+   "text": "payments",
+   "start": 17.233,
+   "end": 17.609
+  },
+  {
+   "text": "and",
+   "start": 17.649,
+   "end": 17.79
+  },
+  {
+   "text": "reports...",
+   "start": 17.83,
+   "end": 18.159
+  },
+  {
+   "text": "handled.",
+   "start": 18.649,
+   "end": 18.978
+  },
+  {
+   "text": "Your",
+   "start": 19.888,
+   "end": 20.076
+  },
+  {
+   "text": "Product",
+   "start": 20.116,
+   "end": 20.445
+  },
+  {
+   "text": "is",
+   "start": 20.485,
+   "end": 20.605
+  },
+  {
+   "text": "live",
+   "start": 20.645,
+   "end": 20.833
+  },
+  {
+   "text": "today.",
+   "start": 20.873,
+   "end": 21.108
+  },
+  {
+   "text": "Let's",
+   "start": 21.568,
+   "end": 21.756
+  },
+  {
+   "text": "set",
+   "start": 21.796,
+   "end": 21.937
+  },
+  {
+   "text": "it",
+   "start": 21.977,
+   "end": 22.097
+  },
+  {
+   "text": "up",
+   "start": 22.137,
+   "end": 22.257
+  },
+  {
+   "text": "for",
+   "start": 22.297,
+   "end": 22.438
+  },
+  {
+   "text": "your",
+   "start": 22.478,
+   "end": 22.666
+  },
+  {
+   "text": "team.",
+   "start": 22.706,
+   "end": 22.894
+  }
+ ]
+}
